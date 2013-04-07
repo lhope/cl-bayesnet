@@ -1,0 +1,252 @@
+// ~->[DNET-1]->~
+
+// File created by an unlicensed user using Netica 2.17 on Jun 08, 2003 at 16:38:37.
+
+bnet Asia {
+autoupdate = TRUE;
+comment = "\n\
+	Chest Clinic                                            Copyright 1998 Norsys Software Corp.\n\n\
+	This belief network is also known as \"Asia\", and is an example which is popular \n\
+	for introducing belief networks.  It is from Lauritzen&Spiegelhalter88 (see below).\n\
+	It is for example purposes only, and should not be used for real decision making.\n\n\
+	It is a simplified version of a network that could be used to diagnose patients arriving\n\
+	at a clinic.  Each node in the network corresponds to some condition of the patient,\n\
+	for example, \"Visit to Asia\" indicates whether the patient recently visited Asia.\n\
+	To diagnose a patient, values are entered for nodes when they are known.  \n\
+	Netica then automatically re-calculates the probabilities for all the other nodes,\n\
+	based on the relationships between them.  The links between the nodes indicate how the\n\
+	relationships between the nodes are structured.\n\n\
+	The two top nodes are for predispositions which influence the likelihood of the diseases. \n\
+	Those diseases appear in the row below them.  At the bottom are symptoms of the diseases.\n\
+	To a large degree, the links of the network correspond to causation.  \n\
+	This is a common structure for diagnostic networks: predisposition nodes at the top, \n\
+	with links to nodes representing internal conditions and failure states, which in turn have\n\
+	links to nodes for observables.  Often there are many layers of nodes representing\n\
+	internal conditions, with links between them representing their complex inter-relationships.\n\n\
+	This network is from Lauritzen, Steffen L. and David J. Spiegelhalter (1988) \"Local \n\
+	computations with probabilities on graphical structures and their application to expert \n\
+	systems\" in Journal Royal Statistics Society B, 50(2), 157-194.\n\n\n\
+	TUTORIAL:            Basic Probabilistic Inference\n\
+	--------\n\n\
+	Keep in mind when doing tutorials that there is a great deal of assitance available\n\
+	from Netica's onscreen help, often about the exact networks of the tutorials.\n\
+	For this example, choose Help->Contents/Index, click on the Index tab, type in\n\
+	\"Asia\", and go to the example.\n\n\
+	All the information contained in a belief network can be observed by examining 3 things.\n\n\
+	First, there is the network structure, consisting of the nodes and their links,\n\
+	which you can see in the network diagram currently being displayed.\n\n\
+	Second, are the properties of each node, which you can see in their node dialog box,\n\
+	obtained by double-clicking on the node.\n\n\
+	Third, are the actual relationships between the nodes, which you can see by \n\
+	single-clicking on a node to select it, then choosing Relation->View/Edit.  \n\
+	The relationship may be probabilistic or functional.  For example, click on \n\
+	\"Lung Cancer\", and then choose Relation->View/Edit, to see its probabilistic relation \n\
+	with Smoking (the numbers are for example purposes only, and may not reflect reality).\n\
+	If you click on \"Tuberculosis or Cancer\", and choose Relation->View/Edit, you can see\n\
+	its functional dependence on Tuberculosis and Lung Cancer.\n\n\
+	To compile the network for use, click on its window to make it active,\n\
+	and choose Network->Compile. \n\n\
+	The appropriate data structures for fast inference have been built internally.  \n\
+	The bars in each node have darkened, indicating that they and the numbers beside them\n\
+	are now valid data.  The indicate the probabilities of each state of the node.\n\n\
+	Suppose we want to \"diagnose\" a new patient.  When she first enters the clinic,\n\
+	without having any information about her, we believe she has lung cancer with a\n\
+	probability of 5.5%, as can be seen on the Lung Cancer node (the number may be higher\n\
+	than that for the general population, because something has led her to the chest clinic).\n\n\
+	If she has an abnormal x-ray, that information can be entered by clicking on the word\n\
+	\"Abnormal\" of the \"XRay Result\" node (in a real-world belief network, you would probably\n\
+	be able to enter in exactly what way the x-ray was \"abnormal\").\n\n\
+	All the probability numbers and bars will change to take into account the finding.\n\
+	Now the probability that she has lung cancer has increased to 48.9%.\n\n\
+	If you further indicate that she has made a visit to asia recently, by clicking on\n\
+	\"Visit\", the probability of lung cancer decreases to 37.1%, because the abnormal XRay is \n\
+	partially explained away by a greater chance of Tuberculosis (which she could \n\
+	catch in Asia).  Old fashioned medical expert systems had problems with this kind of \n\
+	reasoning, since each of the findings \"Abnormal XRay\" and \"Visit to Asia\" by themselves\n\
+	increase or leave the same the probability of lung cancer.\n\n\
+	You can try entering and changing some more findings.  To remove a finding, simply click\n\
+	on its name again.  If you want to remove all the findings (a new patient has just walked\n\
+	in), choose Network->Remove Findings.\n\n\n\n\n\
+	";
+whenchanged = 1055115507;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Palatino"; size= 14;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (22, 22, 870, 589);
+	CommentShowing = TRUE;
+	CommentWindowPosn = (22, 491, 815, 729);
+	resolution = 72;
+	drawingbounds = (1104, 730);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		landscape = FALSE;
+		magnify = 1;
+		};
+	};
+
+node VisitAsia {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Visit, No_Visit);
+	parents = ();
+	probs = 
+		// Visit        No Visit     
+		  (0.01,        0.99);
+	title = "Visit To Asia";
+	comment = "Patient has recently visited Asia";
+	whenchanged = 904512863;
+	belief = (0.01, 0.99);
+	visual V1 {
+		center = (126, 54);
+		height = 7;
+		};
+	};
+
+node Tuberculosis {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Present, Absent);
+	parents = (VisitAsia);
+	probs = 
+		// Present      Absent         // VisitAsia 
+		 ((0.05,        0.95),         // Visit     
+		  (0.01,        0.99));        // No Visit  ;
+	title = "Tuberculosis";
+	belief = (0.0104, 0.9896);
+	visual V1 {
+		center = (126, 156);
+		height = 1;
+		};
+	};
+
+node Smoking {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Smoker, NonSmoker);
+	parents = ();
+	probs = 
+		// Smoker       NonSmoker    
+		  (0.5,         0.5);
+	title = "Smoking";
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (510, 54);
+		height = 8;
+		};
+	};
+
+node Cancer {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Present, Absent);
+	parents = (Smoking);
+	probs = 
+		// Present      Absent         // Smoking   
+		 ((0.1,         0.9),          // Smoker    
+		  (0.01,        0.99));        // NonSmoker ;
+	title = "Lung Cancer";
+	belief = (0.055, 0.945);
+	visual V1 {
+		center = (384, 156);
+		height = 4;
+		link 1 {
+			path = ((466, 91), (429, 120));
+			};
+		};
+	};
+
+node TbOrCa {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (True, False);
+	parents = (Tuberculosis, Cancer);
+	functable = 
+		                     // Tuberculosis Cancer  
+		 ((True,             // Present      Present 
+		   True),            // Present      Absent  
+		  (True,             // Absent       Present 
+		   False));          // Absent       Absent  ;
+	title = "Tuberculosis or Cancer";
+	whenchanged = 2147483647;
+	belief = (0.064828, 0.935172);
+	visual V1 {
+		center = (264, 264);
+		height = 3;
+		link 1 {
+			path = ((171, 193), (217, 228));
+			};
+		};
+	};
+
+node XRay {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Abnormal, Normal);
+	parents = (TbOrCa);
+	probs = 
+		// Abnormal     Normal         // TbOrCa 
+		 ((0.98,        0.02),         // True   
+		  (0.05,        0.95));        // False  ;
+	title = "XRay Result";
+	whenchanged = 904512850;
+	belief = (0.11029, 0.88971);
+	visual V1 {
+		center = (138, 366);
+		height = 2;
+		};
+	};
+
+node Bronchitis {
+	kind = NATURE;
+	discrete = TRUE;
+	states = (Present, Absent);
+	parents = (Smoking);
+	probs = 
+		// Present      Absent         // Smoking   
+		 ((0.6,         0.4),          // Smoker    
+		  (0.3,         0.7));         // NonSmoker ;
+	title = "Bronchitis";
+	belief = (0.45, 0.55);
+	visual V1 {
+		center = (636, 156);
+		height = 6;
+		link 1 {
+			path = ((554, 91), (591, 120));
+			};
+		};
+	};
+
+node Dyspnea {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	states = (Present, Maybe, Absent);
+	parents = (TbOrCa, Bronchitis);
+	probs = 
+		// Present      Maybe        Absent          // TbOrCa Bronchitis 
+		(((0.1,         0.1,         0.8),           // True   Present    
+		  (0.1,         0.1,         0.8)),          // True   Absent     
+		 ((0.1,         0.1,         0.8),           // False  Present    
+		  (0.1,         0.1,         0.8)));         // False  Absent     ;
+	title = "Dyspnea";
+	comment = "Shortness of breath.";
+	whenchanged = 1055115507;
+	belief = (0.1, 0.1, 0.8);
+	visual V1 {
+		center = (426, 366);
+		height = 5;
+		link 1 {
+			path = ((321, 301), (351, 319));
+			};
+		};
+	};
+
+ElimOrder = (VisitAsia, XRay, Tuberculosis, Smoking, Cancer, TbOrCa, Bronchitis, Dyspnea);
+};

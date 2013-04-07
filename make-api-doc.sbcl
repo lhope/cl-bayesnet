@@ -1,0 +1,30 @@
+#!/usr/bin/sbcl --script
+
+;; The default quicklisp location.
+#-quicklisp
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
+  (when (probe-file quicklisp-init)
+    (load quicklisp-init)))
+
+(require 'sb-introspect) ;; workaround, cl-api should include this.
+(ql:quickload '("cl-bayesnet" "cl-api"))
+
+(unless (cdr sb-ext:*posix-argv*)
+  (format t "~&Usage: make-api-doc.sbcl <output-directory>~2%"))
+
+(defparameter *doc-dir*
+  (let ((arg (second sb-ext:*posix-argv*)))
+    (if arg
+	(make-pathname :directory arg)
+	"")))
+
+(cl-api:api-gen :cl-bayesnet *doc-dir*
+		:exclude-const (constantly t)
+		:exclude-var   (constantly t)
+		:exclude-class (constantly t)
+		:exclude-cond  (constantly t)
+		:exclude-macro nil
+		)
+
+(format t "~2%")

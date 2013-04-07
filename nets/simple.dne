@@ -1,0 +1,92 @@
+// ~->[DNET-1]->~
+
+// File created by someone at MonashU using Netica 3.19 on Aug 31, 2007 at 19:01:05.
+
+bnet simple {
+AutoCompile = TRUE;
+autoupdate = TRUE;
+whenchanged = 1188550832;
+
+visual V1 {
+	defdispform = BELIEFBARS;
+	nodelabeling = TITLE;
+	NodeMaxNumEntries = 50;
+	nodefont = font {shape= "Arial"; size= 10;};
+	linkfont = font {shape= "Arial"; size= 9;};
+	windowposn = (44, 44, 756, 513);
+	resolution = 72;
+	drawingbounds = (1044, 769);
+	showpagebreaks = FALSE;
+	usegrid = TRUE;
+	gridspace = (6, 6);
+	NodeSet Node {BuiltIn = 1; Color = 0xc0c0c0;};
+	NodeSet Nature {BuiltIn = 1; Color = 0xf8eed2;};
+	NodeSet Deterministic {BuiltIn = 1; Color = 0xd3caa6;};
+	NodeSet Finding {BuiltIn = 1; Color = 0xc8c8c8;};
+	NodeSet Constant {BuiltIn = 1; Color = 0xffffff;};
+	NodeSet ConstantValue {BuiltIn = 1; Color = 0xffffb4;};
+	NodeSet Utility {BuiltIn = 1; Color = 0xffbdbd;};
+	NodeSet Decision {BuiltIn = 1; Color = 0xdee8ff;};
+	NodeSet Documentation {BuiltIn = 1; Color = 0xf0fafa;};
+	NodeSet Title {BuiltIn = 1; Color = 0xffffff;};
+	PrinterSetting A {
+		margins = (1270, 1270, 1270, 1270);
+		landscape = FALSE;
+		magnify = 1;
+		};
+	};
+
+node A {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	numstates = 2;
+	parents = ();
+	probs = 
+		// state0       state1       
+		  (0.5,         0.5);
+	whenchanged = 1188550827;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (288, 108);
+		height = 1;
+		};
+	};
+
+node B {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	numstates = 2;
+	parents = (A);
+	probs = 
+		// state0       state1         // A      
+		 ((0.8,         0.2),          // state0 
+		  (0.2,         0.8));         // state1 ;
+	whenchanged = 1188550832;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (138, 270);
+		height = 3;
+		};
+	};
+
+node C {
+	kind = NATURE;
+	discrete = TRUE;
+	chance = CHANCE;
+	numstates = 2;
+	parents = (A);
+	probs = 
+		// state0       state1         // A      
+		 ((0.4,         0.6),          // state0 
+		  (0.6,         0.4));         // state1 ;
+	whenchanged = 1188550819;
+	belief = (0.5, 0.5);
+	visual V1 {
+		center = (438, 270);
+		height = 2;
+		};
+	};
+ElimOrder = (B, A, C);
+};
