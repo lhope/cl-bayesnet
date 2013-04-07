@@ -27,9 +27,21 @@ The goals of this project is to be useful to developers who want to use the resu
 
 ## Using cl-bayesnet ##
 
-- Use `make-api-doc.sbcl` in this directory to make the documentation (cl-bayesnet.html). This assumes you have [quicklisp](http://www.quicklisp.org) and [sbcl](http://www.sbcl.org) installed.
+# Dependencies
 
-- See `tests/test-alarm.lisp` for example usage.
+cl-bayesnet uses [S-XML](http://common-lisp.net/project/s-xml/) to parse xmlbif. It uses [trivial-shell](http://common-lisp.net/project/trivial-shell/) to call the C compiler and [CFFI](http://common-lisp.net/project/cffi/) to load the resultant shared object file. You can disable the dependencies on CFFI and trivial-shell by adding `:cl-bayesnet-no-cffi` to your Lisp's features list.
+
+All dependencies are available through [quicklisp](http://www.quicklisp.org).
+
+# Documentation
+
+See [the API-Documentation on github](https://github.com/lhope/cl-bayesnet/wiki/API-Documentation). It may not necessarily be up to date.
+
+Or, use `make-api-doc.sbcl` in this directory to make the API documentation (cl-bayesnet.html). This assumes you have [quicklisp](http://www.quicklisp.org) and [sbcl](http://www.sbcl.org) installed. 
+
+# Usage
+
+See [tests/test-alarm.lisp](https://github.com/lhope/cl-bayesnet/blob/master/tests/test-alarm.lisp) for example usage.
 
 ## Ownership and License ##
 
