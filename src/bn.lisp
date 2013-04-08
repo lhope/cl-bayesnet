@@ -22,6 +22,25 @@
 
 (in-package :cl-bayesnet)
 
+(defgeneric name (net/node)
+  (:documentation
+   "For a net, a string identifier and for a node, a keyword
+identifier."))
+
+(defgeneric net (node/join-tree)
+  (:documentation
+   "Returns the containing net for a node or join-tree."))
+
+(defgeneric node-order (net)
+  (:documentation
+   "Returns a list of node-names as keywords. The ordering matches
+their index order. This is set as part of the network compilation
+process."))
+
+(defgeneric num-nodes (net)
+  (:documentation
+   "The amount of nodes in the network."))
+
 (defclass net ()
   ((name :reader name :writer set-name)
    (compiled :initform nil :accessor compiled)
@@ -31,6 +50,18 @@
    (node-vec :accessor node-vec); :type (simple-array node *))
    (nodes :initform (make-hash-table) :reader nodes)
    (properties :initform (make-hash-table) :reader properties)))
+
+(defgeneric num-states (node)
+  (:documentation
+   "The amount of states for the given node."))
+
+(defgeneric parents (node)
+  (:documentation
+   "A vector of parent names as keywords for the given node."))
+
+(defgeneric states (node)
+  (:documentation
+   "A vector of state names as keywords for the given node."))
 
 (defclass node ()
   ((name :reader name :writer set-name)
@@ -102,7 +133,10 @@ parent-indices."
      for node being each hash-value in (nodes net)
      sum (length (the simple-vector (parents node)))))
 
-(defgeneric node (node-designator net-designator))
+(defgeneric node (name/index net/join-tree)
+  (:documentation
+   "Retrieve the node represented by a keyword name or index from the
+given net or join-tree."))
 
 (defmethod node ((name symbol) (net net))
   (gethash name (nodes net)))
@@ -223,11 +257,14 @@ the net's node-order."))
        (unwind-protect (progn ,@body)
 	 (setf (evidence ,gobject) ,gstore)))))
 
-(defmacro with-evidence ((object &rest evidence) &body body)
-  (let ((gobject (gensym)))
-    `(let ((,gobject ,object))
-       (save-evidence ,gobject
-	 (setf (evidence ,gobject) ',evidence)
+(defmacro with-evidence ((net &rest evidence) &body body)
+  "Saves the existing evidence in the net and sets the evidence to
+evidence. Restores the net to its previous state after leaving the
+with-evidence block."
+  (let ((gnet (gensym)))
+    `(let ((,gnet ,net))
+       (save-evidence ,gnet
+	 (setf (evidence ,gnet) ',evidence)
 	 ,@body))))
 
 (defgeneric %query (net query)

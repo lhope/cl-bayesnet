@@ -44,7 +44,6 @@
    :node-order
    :name
    :states
-   :statep
    :parents
    :num-states
    :num-nodes
