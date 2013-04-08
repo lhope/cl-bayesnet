@@ -23,7 +23,7 @@
 (in-package :cl-user)
 
 (defpackage :cl-bayesnet
-  (:documentation "Bayesian Network compilation package.")
+  (:documentation "A Common Lisp Bayesian Network Inference Engine")
   (:use :cl)
   (:nicknames :bn)
   (:export 

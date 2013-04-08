@@ -59,7 +59,7 @@
    (obs        :initarg :obs        :accessor obs)
    (name       :initarg :name       :reader name)
    (states     :initarg :states     :reader states)
-   (join-tree  :initarg :join-tree  :accessor join-tree)))
+   (join-tree  :initarg :join-tree  :accessor join-tree-of)))
 
 (defun make-potential (net cluster assignment)
   (loop with mask = (returnit (make-array (num-nodes net) :initial-element nil)
@@ -117,7 +117,7 @@
 						:nodes (coerce nodes 'vector)
 						:assignment node-assignment)
 			 (loop for node across (nodes it)
-			    do (setf (join-tree node) it))))))))))
+			    do (setf (join-tree-of node) it))))))))))
 
 (defun marginalise (sep-set cluster)
   "Return a new potential for sep-set to match cluster."

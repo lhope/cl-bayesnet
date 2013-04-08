@@ -235,7 +235,7 @@
       (let ((node-name (if (listp (car node)) (caar node) (car node))))
 	(case node-name
 	  (:name
-	   (setf (name net) (second node)))
+	   (set-name (second node) net))
 	  (:variable
 	   (xmlbif-add-variable net node))
 	  (:definition
@@ -249,14 +249,14 @@
      with outcomes
      for (key value) in (cdr node) do
        (case key
-	 (:name (setf (name bnode) (keyify value)))
+	 (:name (set-name (keyify value) bnode))
 	 (:outcome (push (keyify value) outcomes))
 	 (t (warn "xmlbif-add-variable: ignoring ~A=~A" key value)))
      finally
        (assert (name bnode) () "xmlbif-add-variable: variable does not have a name!")
-       (setf (states bnode) (coerce (nreverse outcomes) 'simple-vector)
-	     (gethash (name bnode) (nodes net)) bnode
-	     (net bnode) net)
+       (set-states (coerce (nreverse outcomes) 'simple-vector) bnode)
+       (setf (gethash (name bnode) (nodes net)) bnode)
+       (set-net net bnode)
        (return bnode)))
 
 (defun xmlbif-add-definition (net def)
@@ -272,8 +272,8 @@
 				  for float = (read in nil nil)
 				  while float collect float)))))
      finally
-       (setf parents (nreverse parents)
-	     (parents node) (coerce parents 'simple-vector))
+       (setf parents (nreverse parents))
+       (set-parents (coerce parents 'simple-vector) node)
        ;; this isn't the most efficient table representation. But remember this gets compiled later.
        (loop with state-count = (length (states node))
 	  with table-arity = (loop for parent in parents collect (length (states (gethash parent (nodes net)))))

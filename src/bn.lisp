@@ -23,9 +23,9 @@
 (in-package :cl-bayesnet)
 
 (defclass net ()
-  ((name :accessor name)
+  ((name :reader name :writer set-name)
    (compiled :initform nil :accessor compiled)
-   (node-order :accessor node-order); :type (simple-vector))
+   (node-order :reader node-order :writer set-node-order); :type (simple-vector))
    ;; for rapid access by index.
    (num-nodes :reader num-nodes)
    (node-vec :accessor node-vec); :type (simple-array node *))
@@ -33,11 +33,11 @@
    (properties :initform (make-hash-table) :reader properties)))
 
 (defclass node ()
-  ((name :accessor name)
-   (net :accessor net :writer set-net :initarg :net)
+  ((name :reader name :writer set-name)
+   (net :reader net :writer set-net :initarg :net)
    (table :accessor table)
-   (states :accessor states)
-   (parents :accessor parents); :type simple-vector)
+   (states :reader states :writer set-states)
+   (parents :reader parents :writer set-parents)
    ;; for rapid access by index.
    (parent-vec :accessor parent-vec); :type (simple-array node *))
    (parent-indices :accessor parent-indices :type (simple-array fixnum *))
@@ -91,7 +91,7 @@ parent-indices."
        (setf (index node) index)
      finally
        (setf (slot-value net 'num-nodes) (length node-vec))
-       (setf (node-order net) array)
+       (set-node-order array net)
        (setf (node-vec net) node-vec)
        (loop for node across (node-vec net) ;; now do node parents
 	  do (preprocess-node node))
@@ -128,7 +128,9 @@ parent-indices."
      do (clear-evidence node)))
 
 (defgeneric evidence-index (object)
-  (:documentation "Returns the evidence in a node as a state index and nets as a vector of state indices. -1 indicates no evidence."))
+  (:documentation
+   "Returns the evidence in a node as a state index and nets as a
+vector of state indices. -1 indicates no evidence."))
 
 (defmethod evidence-index ((node node))
   (%evidence node))
@@ -140,7 +142,10 @@ parent-indices."
      when evidence nconc (list (name node) evidence)))
 
 (defgeneric evidence (object)
-  (:documentation "Returns the evidence in a node as its state symbol (nil if no evidence), and for nets a plist of node-state pairs. Settable."))
+  (:documentation
+   "Returns the evidence in a node as its state symbol (nil if no
+evidence), and for nets and join-trees a plist of node-state
+pairs. Settable."))
 
 (defmethod evidence ((node node))
   (let ((evidence (%evidence node)))
@@ -155,7 +160,9 @@ parent-indices."
      when evidence nconc (list (name node) evidence)))
 
 (defgeneric add-evidence (object evidence)
-  (:documentation "Sets the evidence in a node via state index or symbol. For a net, adds the evidence as a plist of node-state pairs."))
+  (:documentation
+   "Sets the evidence in a node via state index or symbol. For a net or join-tree,
+ adds the evidence as a plist of node-state pairs."))
 
 (defmethod add-evidence ((net net) (evidence list))
   (when evidence
@@ -170,7 +177,11 @@ parent-indices."
   (setf (evidence object) evidence))
 
 (defgeneric (setf evidence) (evidence object)
-  (:documentation "Sets the evidence in object via state index or symbol."))
+  (:documentation 
+   "Sets the evidence in a node via state index or symbol. For a net
+or join-tree, sets the evidence as either a plist of node-state pairs,
+or a vector of state indices (or -1 for unobserved) corresponding to
+the net's node-order."))
 
 (defmethod (setf evidence) ((null null) (node node))
   (setf (%evidence node) -1))
