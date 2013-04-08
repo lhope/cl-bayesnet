@@ -248,7 +248,8 @@ single tree (which is correct at 15/12/2007)."
      finally (return (aref results (1- (vlength results))))))
 
 (defun use-interpreted (net)
-  "Use interpreted arithmetic circuit instructions for the net. Returns the instructions object."
+  "Use interpreted arithmetic circuit instructions for the
+net. Returns the instructions object."
   (let ((ins (gen-instructions net)))
     (setf (compiled net)
 	  (lambda (net-spec)

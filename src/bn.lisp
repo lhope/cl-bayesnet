@@ -195,8 +195,8 @@ pairs. Settable."))
 
 (defgeneric add-evidence (object evidence)
   (:documentation
-   "Sets the evidence in a node via state index or symbol. For a net or join-tree,
- adds the evidence as a plist of node-state pairs."))
+   "Sets the evidence in a node via state index or symbol. For a net
+or join-tree, adds the evidence as a plist of node-state pairs."))
 
 (defmethod add-evidence ((net net) (evidence list))
   (when evidence
@@ -346,9 +346,12 @@ net and vector   - The joint probability for the whole net, given the
                    vector. Vector has the num-nodes length, and
                    contains either a state number for each node, or -1
                    if the node state is unknown.
-net and symbol   - A probability vector for the states of the node designated by symbol.
 
-net and list     - The joint probability for the whole net, given list, which is a plist of node-state pairs.
+net and symbol   - A probability vector for the states of the node
+                   designated by symbol.
+
+net and list     - The joint probability for the whole net, given list,
+                   which is a plist of node-state pairs.
 "
   (%query object query))
 
