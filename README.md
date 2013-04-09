@@ -33,6 +33,10 @@ cl-bayesnet uses [S-XML](http://common-lisp.net/project/s-xml/) to parse xmlbif.
 
 All dependencies are available through [quicklisp](http://www.quicklisp.org).
 
+# Installation
+
+I suggest using [quicklisp](http://www.quicklisp.org). Install that, and then grab the source (via tarball or git) and put it in `~/quicklisp/local-projects/`. Symlinks work okay too.
+
 # Documentation
 
 See [the API-Documentation on github](https://github.com/lhope/cl-bayesnet/wiki/API-Documentation). It may not necessarily be up to date.
