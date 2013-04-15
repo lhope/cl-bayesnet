@@ -26,6 +26,8 @@
   :author "Lucas Hope <lucas.r.hope@gmail.com>"
   :version "0.1.0"
   :maintainer "Lucas Hope <lucas.r.hope@gmail.com>"
+  :description "A Common Lisp Bayesian Network Inference Engine"
+  :license "LLGPL"
   :depends-on (:s-xml 
 	       #-cl-bayesnet-no-cffi :trivial-shell
 	       #-cl-bayesnet-no-cffi :cffi)
